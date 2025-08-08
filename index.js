@@ -1,7 +1,11 @@
+// 🚨 Nonaktifkan TLS verification (gunakan hanya untuk testing!)
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 import express from 'express';
 import fetch from 'node-fetch';
 import cors from 'cors';
 import dotenv from 'dotenv';
+
 dotenv.config();
 
 const app = express();
@@ -9,9 +13,11 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
-// 🟢 Optional: Root endpoint to verify it's running
+// 🟢 Root endpoint untuk test
 app.get('/', (req, res) => {
     res.send('✅ Proxy Server is running on Railway!');
+    console.log(process.env.ABUSEIPDB_KEY);
+    console.log(process.env.HA_API_KEY);
 });
 
 // 🔍 Hybrid Analysis - Search by hash
@@ -34,7 +40,7 @@ app.get('/ha/search', async (req, res) => {
     }
 });
 
-// 📄 Hybrid Analysis - Report summary by ID
+// 📄 Hybrid Analysis - Summary by ID
 app.get('/ha/summary/:id', async (req, res) => {
     const { id } = req.params;
     try {
