@@ -9,8 +9,16 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
+// 🟢 Optional: Root endpoint to verify it's running
+app.get('/', (req, res) => {
+    res.send('✅ Proxy Server is running on Railway!');
+});
+
+// 🔍 Hybrid Analysis - Search by hash
 app.get('/ha/search', async (req, res) => {
     const { hash } = req.query;
+    if (!hash) return res.status(400).json({ error: "Missing hash parameter" });
+
     try {
         const response = await fetch(`https://www.hybrid-analysis.com/api/v2/search/hash?hash=${hash}`, {
             headers: {
@@ -26,6 +34,7 @@ app.get('/ha/search', async (req, res) => {
     }
 });
 
+// 📄 Hybrid Analysis - Report summary by ID
 app.get('/ha/summary/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -44,8 +53,11 @@ app.get('/ha/summary/:id', async (req, res) => {
     }
 });
 
+// 🔐 AbuseIPDB - Check IP
 app.get('/abuseipdb', async (req, res) => {
     const { ip } = req.query;
+    if (!ip) return res.status(400).json({ error: "Missing ip parameter" });
+
     try {
         const response = await fetch(`https://api.abuseipdb.com/api/v2/check?ipAddress=${ip}&verbose`, {
             headers: {
@@ -62,5 +74,5 @@ app.get('/abuseipdb', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Proxy server listening on port ${PORT}`);
+    console.log(`🚀 Proxy server running on port ${PORT}`);
 });
